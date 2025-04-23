@@ -1,12 +1,77 @@
-# React + Vite
+# React Components Practice
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Описание проекта
+Простое React-приложение для изучения основ работы с компонентами, состоянием (state) и пропсами (props). Включает:
+- Динамическое обновление имени с интервалом в 10 секунд;
+- Отображение текущего времени с проверкой делимости минут на 5;
+- Статичный заголовок.
 
-Currently, two official plugins are available:
+![Схема компонентов](https://github.com/user-attachments/assets/b1f92104-97b0-4b4c-8e05-d5bc1a02c6e7)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Структура проекта
+#### src/
+#### ├── components/
+#### │ ├── Container.jsx # Родительский компонент с состоянием имени
+#### │ ├── Greeting.jsx # Приветствие с обработкой изменений имени
+#### │ ├── Clock.jsx # Часы с проверкой делимости минут
+#### │ └── Header.jsx # Статичный заголовок
+#### └── main.jsx # Точка входа приложения
 
-## Expanding the ESLint configuration
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Установка и запуск
+1. Клонируйте репозиторий:
+   ```bash
+   git clone https://github.com/ваш-логин/my-react-app.git
+   cd my-react-app
+
+2. Установите зависимости:
+   ```bash
+   npm install
+3. Запустите dev-сервер:
+   ```bash
+   npm run dev
+
+## Функциональные особенности
+1. Компонент Container
+    ```jsx
+    ## Использует useState для хранения имени из списка: ["Анна", "Иван", "София", "Дмитрий", "Вика", "Андрей"].
+    ## Генерирует случайное имя при первом рендере:
+    useEffect(() => {
+      const randomName = names[Math.floor(Math.random() * names.length)];
+      setCurrentName(randomName);
+    }, []);
+    ## Обновляет имя каждые 10 секунд через setInterval в useEffect. 
+
+2. Компонент Greeting
+    ```jsx
+    ## Принимает name через пропсы и отслеживает изменения:
+    const prevNameRef = useRef(name);
+    useEffect(() => {
+      if (prevNameRef.current !== name) {
+        prevNameRef.current = name;
+      }
+    }, [name]);
+    ## Выводит сообщение при смене имени:
+    {prevNameRef.current === name ? (
+      <p>Привет, {name}!</p>
+    ) : (
+      <p>Привет, у тебя поменялось имя, теперь ты {name}!</p>
+    )}
+
+3. Компонент Clock
+    ```jsx
+    ## Обновляет время каждую секунду:
+    useEffect(() => {
+      const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+      return () => clearInterval(timer);
+    }, []);
+    ## Проверяет делимость минут на 5:
+    const isDivisibleBy5 = currentTime.getMinutes() % 5 === 0;
+    {isDivisibleBy5 && <p>Время делится на 5</p>}
+
+4. Компонент Header
+    ```jsx
+    ## Статичный компонент без пропсов/состояния:
+    function Header() {
+      return <h1>Это мой первый React. проект!</h1>;
+    }
